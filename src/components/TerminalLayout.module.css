@@ -1,0 +1,4 @@
+.bottomBar {
+  line-height: 1.5;
+  @apply text-[1.2em] md:text-[1em];
+}

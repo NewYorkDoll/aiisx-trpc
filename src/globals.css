@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  button,
+  [type='button'],
+  [type='reset'],
+  [type='submit'] {
+    background-color: var(--nextui-colors-primary);
+  }
+}
+
+html,
+body {
+  font-family: 'Consolas,monaco,monospace';
+}
+
+.text-gradient {
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: linear-gradient(to top right, var(--tw-gradient-stops));
+  color: transparent;
+  font-weight: 700;
+}
