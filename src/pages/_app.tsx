@@ -6,13 +6,16 @@ import { trpc } from '~/utils/trpc';
 import '~/globals.css';
 import { createTheme } from '@nextui-org/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
-
-const lightTheme = createTheme({
+const theme = createTheme({
   type: 'dark',
   theme: {
     colors: {
       black: '#101014',
+      myBlack: '#48484e',
     }, // override dark theme colors
+    radii: {
+      xs: '4px',
+    },
   },
 });
 
@@ -33,10 +36,10 @@ const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
       defaultTheme="system"
       attribute="class"
       value={{
-        light: lightTheme.className,
+        light: theme.className,
       }}
     >
-      <NextUIProvider>
+      <NextUIProvider theme={theme}>
         <Component {...pageProps} />
       </NextUIProvider>
     </NextThemesProvider>

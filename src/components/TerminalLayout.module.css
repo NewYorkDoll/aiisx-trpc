@@ -2,3 +2,6 @@
   line-height: 1.5;
   @apply text-[1.2em] md:text-[1em];
 }
+.barItem {
+  @apply pl-1.5 pr-2 rounded-br-sm inline-flex text-zinc-400 align-middle cursor-pointer transition hover:bg-zinc-800;
+}

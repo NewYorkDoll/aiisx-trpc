@@ -1,18 +1,38 @@
 import { trpc } from '../utils/trpc';
+import { createServerSideHelpers } from '@trpc/react-query/server';
 import { NextPageWithLayout } from './_app';
 import { inferProcedureInput } from '@trpc/server';
 import Link from 'next/link';
 import { Fragment } from 'react';
 import type { AppRouter } from '~/server/routers/_app';
+import { appRouter } from '~/server/routers/_app';
 import { Button } from '@nextui-org/react';
 import TerminalLayout from '~/components/TerminalLayout';
+import { GetServerSidePropsContext } from 'next';
+import superjson from 'superjson';
+import { BaseInfo } from '~/interface/query';
 
-const IndexPage: NextPageWithLayout = () => {
+export async function getServerSideProps() {
+  const ssg = await createServerSideHelpers({
+    router: appRouter,
+    ctx: {},
+    transformer: superjson, // optional - adds superjson serialization
+  });
+  const baseInfo = await ssg.getBaseInfo.fetch();
+  // Pass data to the page via props
+  return { props: { baseInfo: baseInfo } };
+}
+
+const IndexPage: NextPageWithLayout = (props) => {
+  const baseInfo = (props as { baseInfo: BaseInfo }).baseInfo;
+
   return (
     <>
-      <TerminalLayout>
-        <div className="h-full"> main </div>
-      </TerminalLayout>
+      {baseInfo && (
+        <TerminalLayout baseInfo={baseInfo}>
+          <div className="h-full">{<p>{baseInfo.githubUser.login}</p>}</div>
+        </TerminalLayout>
+      )}
     </>
   );
 };
