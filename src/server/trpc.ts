@@ -11,6 +11,7 @@
 import { initTRPC } from '@trpc/server';
 import { transformer } from '~/utils/transformer';
 import { Context } from './context';
+import { Client, cacheExchange, fetchExchange } from '@urql/core';
 
 const t = initTRPC.context<Context>().create({
   /**
@@ -46,3 +47,8 @@ export const middleware = t.middleware;
  * @see https://trpc.io/docs/v10/merging-routers
  */
 export const mergeRouters = t.mergeRouters;
+
+export const urqlClient = new Client({
+  url: 'http://192.168.100.158:8080/query',
+  exchanges: [cacheExchange, fetchExchange],
+});

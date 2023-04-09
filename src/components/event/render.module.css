@@ -1,0 +1,4 @@
+.timestamp {
+  opacity: max(0.2, calc(var(--i) / var(--total)));
+  @apply transition duration-100;
+}

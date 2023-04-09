@@ -20,7 +20,7 @@ const CoreTerminal = ({ path, prefix, value, githubuser }: Props) => {
             <span className="mr-2">{prefix}</span>
           )}
           <span className="text-zinc-500">:</span>
-          <span className="relative top-[4px]">{path}</span>
+          <span>{path}</span>
 
           <span className="text-zinc-500">$</span>
         </span>

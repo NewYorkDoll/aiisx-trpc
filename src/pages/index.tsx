@@ -11,9 +11,9 @@ import TerminalLayout from '~/components/TerminalLayout';
 import { GetServerSidePropsContext } from 'next';
 import superjson from 'superjson';
 import { BaseInfo } from '~/interface/query';
-
+import EventRender from '../components/event/render';
 export async function getServerSideProps() {
-  const ssg = await createServerSideHelpers({
+  const ssg = createServerSideHelpers({
     router: appRouter,
     ctx: {},
     transformer: superjson, // optional - adds superjson serialization
@@ -30,7 +30,7 @@ const IndexPage: NextPageWithLayout = (props) => {
     <>
       {baseInfo && (
         <TerminalLayout baseInfo={baseInfo}>
-          <div className="h-full">{<p>{baseInfo.githubUser.login}</p>}</div>
+          <EventRender />
         </TerminalLayout>
       )}
     </>

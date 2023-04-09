@@ -1,15 +1,11 @@
 /**
  * This file contains the root router of your tRPC-backend
  */
-import { Client, cacheExchange, fetchExchange } from '@urql/core';
-import { publicProcedure, router } from '../trpc';
+import { publicProcedure, router, urqlClient } from '../trpc';
 import { postRouter } from './post';
 import { BaseInfo } from '~/interface/query';
-
-const client = new Client({
-  url: 'http://192.168.100.158:8080/query',
-  exchanges: [cacheExchange, fetchExchange],
-});
+import { z } from 'zod';
+import { eventRouter } from './event';
 
 const QUERY = `
 query base {
@@ -50,9 +46,8 @@ query base {
 `;
 
 export const appRouter = router({
-  healthcheck: publicProcedure.query(() => 'yay!'),
   getBaseInfo: publicProcedure.query(async () => {
-    return await client
+    return await urqlClient
       .query(QUERY, {})
       .toPromise()
       .then((result) => {
@@ -60,6 +55,7 @@ export const appRouter = router({
       });
   }),
   post: postRouter,
+  event: eventRouter,
 });
 
 export type AppRouter = typeof appRouter;

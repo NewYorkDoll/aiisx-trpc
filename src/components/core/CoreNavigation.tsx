@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import styles from './CoreNavigation.module.css';
-const CoreNavigation = () => {
-  const menuOptions = [
-    { to: '/', name: 'Home', alias: 'main' },
-    { to: '/posts', name: 'Posts', alias: 'posts' },
-    { to: '/repost', name: 'repost', alias: 'repost' },
-    { to: '/about', name: 'About', alias: 'github' },
-    { to: '/contact', name: 'Contact', alias: 'sudo' },
-  ];
+const CoreNavigation = ({
+  menuOptions,
+}: {
+  menuOptions: {
+    to: string;
+    name: string;
+    alias: string;
+  }[];
+}) => {
   return (
     <>
       <ul
