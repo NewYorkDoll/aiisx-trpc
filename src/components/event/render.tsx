@@ -6,6 +6,8 @@ import { Icon } from '@iconify/react';
 import TimeAgo from 'timeago-react';
 import styles from './render.module.css';
 import EventItemPush from './items/push';
+import EventItemWatch from './items/watch';
+import EventItemPullRequest from './items/pull-request';
 const EventRender = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [inViewport] = useInViewport(ref);
@@ -69,6 +71,15 @@ const EventRender = () => {
                       repo={d.repo}
                       head={d.payload.head}
                     />
+                  )}
+                  {d.eventType === 'WatchEvent' && (
+                    <EventItemWatch
+                      payload={d.payload}
+                      repo={d.repo}
+                    ></EventItemWatch>
+                  )}
+                  {d.eventType === 'PullRequestEvent' && (
+                    <EventItemPullRequest event={d}></EventItemPullRequest>
                   )}
                 </div>
                 <div className="flex-none">

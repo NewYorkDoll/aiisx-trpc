@@ -14,7 +14,7 @@ const EventItemPush = ({
   repo: Repo;
 }) => {
   return (
-    <div className="whitespace-nowrap">
+    <div className="whitespace-nowrap flex gap-2">
       <span className="text-[#d086ff]">pushed</span>
       {commits[0] && commits.length > 1 ? (
         <span>
