@@ -1,7 +1,8 @@
 import { Commit, Repo } from '~/interface/github';
 import ItemTooltip from './hover-item';
 import { Icon } from '@iconify/react';
-import Link from 'next/link';
+import Link from '~/components/Link';
+import EventBlame from '../Blame';
 
 const EventItemPush = ({
   commits,
@@ -12,44 +13,44 @@ const EventItemPush = ({
   commits: Commit[];
   repo: Repo;
 }) => {
-  // 获取link
-  const getLink = () => {
-    if (commits.length > 1) {
-      const url = `${repo.name}/compare/${commits[0]?.sha}...${head}`;
-      return repo.name.includes('://') ? url : `https://github.com/${url}`;
-    } else {
-      const url = `${repo.name}/commit/${commits[0]?.sha}`;
-      return repo.name.includes('://') ? url : `https://github.com/${url}`;
-    }
-  };
-
   return (
     <div className="whitespace-nowrap">
       <span className="text-[#d086ff]">pushed</span>
       {commits[0] && commits.length > 1 ? (
         <span>
           <ItemTooltip
-            content={commits.map((commit) => (
-              <p key={commit.sha} className="truncate" title={commit.message}>
-                {commit.sha.slice(0, 7)}:{commit.message.split('\n')[0]}
-              </p>
-            ))}
+            content={
+              <>
+                {commits.map((commit) => (
+                  <div
+                    className="flex items-center justify-start"
+                    key={commit.url}
+                  >
+                    <Icon
+                      icon="mdi:source-commit"
+                      className="inline-block align-middle"
+                    ></Icon>
+                    <p
+                      key={commit.sha}
+                      className="truncate flex-1"
+                      title={commit.message}
+                    >
+                      {commit.sha.slice(0, 7)}:{commit.message.split('\n')[0]}
+                    </p>
+                  </div>
+                ))}
+              </>
+            }
             className="max-w-[350px]"
           >
-            <a
-              className="text-emerald-600"
-              target="_blank"
-              href={getLink()}
-              rel="noreferrer"
-            >
+            <Link href={`${repo.name}/compare/${commits[0]?.sha}...${head}`}>
               {`${commits.length} commits`}
-            </a>
+            </Link>
           </ItemTooltip>
         </span>
       ) : (
         <span>
           <ItemTooltip
-            // href={`repo.name + '/commit/' + ${commits[0]?.sha} `}
             content={
               <>
                 <Icon
@@ -61,17 +62,15 @@ const EventItemPush = ({
               </>
             }
           >
-            <a
-              className="text-emerald-600"
-              target="_blank"
-              href={getLink()}
-              rel="noreferrer"
-            >
+            <Link href={`${repo.name}/commit/${commits[0]?.sha}`}>
               {commits[0]?.sha.slice(0, 7)}
-            </a>
+            </Link>
           </ItemTooltip>
         </span>
       )}
+      to
+      <Link href={repo.name}></Link>
+      <EventBlame>{commits[0]?.message.split('\n')[0]}</EventBlame>
     </div>
   );
 };
