@@ -7,7 +7,6 @@
     "dx": "run-p dx:* --print-label",
     "dev": "pnpm dx:next",
     "dev:server": "tsx watch src/server",
-    "prebuild": "run-s generate migrate",
     "build": "next build",
     "start": "next start",
     "lint": "eslint --cache --ext \".js,.ts,.tsx\" --report-unused-disable-directives --report-unused-disable-directives src",
@@ -16,8 +15,7 @@
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test-dev": "start-server-and-test dev http://127.0.0.1:3000 test",
-    "test-start": "start-server-and-test start http://127.0.0.1:3000 test",
-    "postinstall": "pnpm generate"
+    "test-start": "start-server-and-test start http://127.0.0.1:3000 test"
   },
   "prettier": {
     "printWidth": 80,
