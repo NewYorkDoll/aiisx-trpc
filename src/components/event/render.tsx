@@ -8,6 +8,7 @@ import styles from './render.module.css';
 import EventItemPush from './items/push';
 import EventItemWatch from './items/watch';
 import EventItemPullRequest from './items/pull-request';
+import EventItemCreate from './items/create';
 const EventRender = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [inViewport] = useInViewport(ref);
@@ -80,6 +81,9 @@ const EventRender = () => {
                   )}
                   {d.eventType === 'PullRequestEvent' && (
                     <EventItemPullRequest event={d}></EventItemPullRequest>
+                  )}
+                  {d.eventType === 'CreateEvent' && (
+                    <EventItemCreate event={d}></EventItemCreate>
                   )}
                 </div>
                 <div className="flex-none">
