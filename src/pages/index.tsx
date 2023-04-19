@@ -1,14 +1,8 @@
-import { trpc } from '../utils/trpc';
 import { createServerSideHelpers } from '@trpc/react-query/server';
 import { NextPageWithLayout } from './_app';
-import { inferProcedureInput } from '@trpc/server';
-import Link from 'next/link';
-import { Fragment } from 'react';
-import type { AppRouter } from '~/server/routers/_app';
+import { Fragment, useState } from 'react';
 import { appRouter } from '~/server/routers/_app';
-import { Button } from '@nextui-org/react';
 import TerminalLayout from '~/components/TerminalLayout';
-import { GetServerSidePropsContext } from 'next';
 import superjson from 'superjson';
 import { BaseInfo } from '~/interface/query';
 import EventRender from '../components/event/render';
@@ -25,12 +19,22 @@ export async function getServerSideProps() {
 
 const IndexPage: NextPageWithLayout = (props) => {
   const baseInfo = (props as { baseInfo: BaseInfo }).baseInfo;
-
+  const [eventCount, setEventCount] = useState(0);
+  const stateChange = (conut: number) => {
+    setEventCount(conut);
+  };
   return (
     <>
       {baseInfo && (
-        <TerminalLayout baseInfo={baseInfo}>
-          <EventRender />
+        <TerminalLayout
+          baseInfo={baseInfo}
+          countSlot={
+            eventCount > 0 && (
+              <span className="bar-item misc"> ln:{eventCount} </span>
+            )
+          }
+        >
+          <EventRender stateChange={stateChange} />
         </TerminalLayout>
       )}
     </>

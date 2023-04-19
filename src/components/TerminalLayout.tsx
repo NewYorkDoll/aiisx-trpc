@@ -9,8 +9,10 @@ import { version } from 'react';
 const TerminalLayout = ({
   children,
   baseInfo,
+  countSlot,
 }: {
   children: ReactNode;
+  countSlot: ReactNode;
   baseInfo: BaseInfo;
 }) => {
   const CustomTooltip = ({
@@ -207,6 +209,11 @@ server build date: ${baseInfo.version.date}`}
                   </span>
                 </CustomTooltip>
                 <span className="ml-auto"></span>
+                {countSlot && (
+                  <span className={`${styles.barItem} ${styles.misc}`}>
+                    {countSlot}
+                  </span>
+                )}
                 <CustomTooltip content="... or just gofmt">
                   <span className={`${styles.barItem} ${styles.misc}`}>
                     spaces:4

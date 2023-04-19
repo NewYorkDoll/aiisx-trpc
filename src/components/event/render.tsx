@@ -12,7 +12,11 @@ import EventItemCreate from './items/create';
 import EventItemFork from './items/fork';
 import EventItemIssues from './items/issues';
 import EventItemIssueComment from './items/issue-comment';
-const EventRender = () => {
+const EventRender = ({
+  stateChange,
+}: {
+  stateChange: (state: number) => void;
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const [inViewport] = useInViewport(ref);
   const [hasNextPage, setHasNextPage] = useState(true);
@@ -43,8 +47,9 @@ const EventRender = () => {
     }, 0) || 0;
 
   useEffect(() => {
-    console.log(total);
-  }, [total]);
+    stateChange(total);
+  }, [stateChange, total]);
+
   return (
     <div className="h-full overflow-y-scroll overflow-x-hidden text-[0.9em] grow basis-0">
       {query.isFetched &&
