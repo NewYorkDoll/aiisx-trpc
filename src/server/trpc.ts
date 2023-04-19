@@ -49,6 +49,6 @@ export const middleware = t.middleware;
 export const mergeRouters = t.mergeRouters;
 
 export const urqlClient = new Client({
-  url: 'http://192.168.100.158:8080/query',
+  url: 'https://aiisx.com/query',
   exchanges: [cacheExchange, fetchExchange],
 });

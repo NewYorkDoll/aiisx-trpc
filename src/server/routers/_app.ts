@@ -2,7 +2,6 @@
  * This file contains the root router of your tRPC-backend
  */
 import { publicProcedure, router, urqlClient } from '../trpc';
-import { postRouter } from './post';
 import { BaseInfo } from '~/interface/query';
 import { z } from 'zod';
 import { eventRouter } from './event';
@@ -54,7 +53,6 @@ export const appRouter = router({
         return result.data as BaseInfo;
       });
   }),
-  post: postRouter,
   event: eventRouter,
 });
 
