@@ -1,14 +1,9 @@
 {
-  "name": "@examples/trpc-next-prisma-starter",
+  "name": "aiisx",
   "version": "10.18.0",
   "private": true,
   "scripts": {
-    "generate": "prisma generate",
-    "prisma-studio": "prisma studio",
-    "db-seed": "prisma db seed",
-    "db-reset": "prisma migrate dev reset",
-    "dx:next": "run-s migrate-dev db-seed && next dev",
-    "dx:prisma-studio": "pnpm prisma-studio",
+    "dx:next": "next dev",
     "dx": "run-p dx:* --print-label",
     "dev": "pnpm dx:next",
     "dev:server": "tsx watch src/server",
@@ -17,17 +12,12 @@
     "start": "next start",
     "lint": "eslint --cache --ext \".js,.ts,.tsx\" --report-unused-disable-directives --report-unused-disable-directives src",
     "lint-fix": "pnpm lint --fix",
-    "migrate-dev": "prisma migrate dev",
-    "migrate": "prisma migrate deploy",
     "test": "run-s test:*",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test-dev": "start-server-and-test dev http://127.0.0.1:3000 test",
     "test-start": "start-server-and-test start http://127.0.0.1:3000 test",
     "postinstall": "pnpm generate"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   },
   "prettier": {
     "printWidth": 80,
@@ -36,7 +26,6 @@
   },
   "dependencies": {
     "@nextui-org/react": "^1.0.0-beta.12",
-    "@prisma/client": "^4.12.0",
     "@tanstack/react-query": "^4.18.0",
     "@trpc/client": "^10.18.0",
     "@trpc/next": "^10.18.0",
@@ -72,7 +61,6 @@
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.21",
     "prettier": "^2.8.7",
-    "prisma": "^4.12.0",
     "start-server-and-test": "^2.0.0",
     "tailwindcss": "^3.3.1",
     "tsx": "^3.12.3",
