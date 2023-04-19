@@ -9,6 +9,9 @@ import EventItemPush from './items/push';
 import EventItemWatch from './items/watch';
 import EventItemPullRequest from './items/pull-request';
 import EventItemCreate from './items/create';
+import EventItemFork from './items/fork';
+import EventItemIssues from './items/issues';
+import EventItemIssueComment from './items/issue-comment';
 const EventRender = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [inViewport] = useInViewport(ref);
@@ -84,6 +87,13 @@ const EventRender = () => {
                   )}
                   {d.eventType === 'CreateEvent' && (
                     <EventItemCreate event={d}></EventItemCreate>
+                  )}
+                  {d.eventType === 'ForkEvent' && <EventItemFork event={d} />}
+                  {d.eventType === 'IssuesEvent' && (
+                    <EventItemIssues event={d}></EventItemIssues>
+                  )}
+                  {d.eventType === 'IssueCommentEvent' && (
+                    <EventItemIssueComment event={d}></EventItemIssueComment>
                   )}
                 </div>
                 <div className="flex-none">

@@ -1,6 +1,14 @@
 import { ReactNode } from 'react';
 
-const Link = ({ href, children }: { href: string; children?: ReactNode }) => {
+const Link = ({
+  href,
+  children,
+  className,
+}: {
+  href: string;
+  children?: ReactNode;
+  className?: string;
+}) => {
   // 获取link
   const getLink = () => {
     return href.includes('://') ? href : `https://github.com/${href}`;
@@ -8,7 +16,7 @@ const Link = ({ href, children }: { href: string; children?: ReactNode }) => {
 
   return (
     <a
-      className="text-emerald-600"
+      className={`text-emerald-600 ${className}`}
       target="_blank"
       href={getLink()}
       rel="noreferrer"

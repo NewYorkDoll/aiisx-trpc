@@ -33,7 +33,7 @@ const EventItemCreate = ({ event }: { event: EventNode }) => {
           on
         </>
       )}
-      <Link href={event.repo.name}></Link>
+      <Link href={event.repo.name}>{event.repo.name}</Link>
     </div>
   );
 };
