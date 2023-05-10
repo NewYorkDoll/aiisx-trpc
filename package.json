@@ -44,7 +44,7 @@
   "devDependencies": {
     "@iconify/react": "^4.1.0",
     "@playwright/test": "^1.26.1",
-    "@types/node": "^18.7.20",
+    "@types/node": "^20.1.2",
     "@types/node-schedule": "^2.1.0",
     "@types/react": "^18.0.9",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
