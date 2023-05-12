@@ -130,6 +130,7 @@ const TerminalLayout = ({
 
   const menuOptions = [
     { to: '/', name: 'Home', alias: 'main' },
+    { to: '/game-are-life', name: 'No Game No Life', alias: 'game' },
     { to: '/posts', name: 'Posts', alias: 'posts' },
     { to: '/repost', name: 'repost', alias: 'repost' },
     {

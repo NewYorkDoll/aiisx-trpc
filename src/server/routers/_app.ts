@@ -5,6 +5,7 @@ import { publicProcedure, router, urqlClient } from '../trpc';
 import { BaseInfo } from '~/interface/query';
 import { z } from 'zod';
 import { eventRouter } from './event';
+import { gameRouter } from './game';
 
 const QUERY = `
 query base {
@@ -54,6 +55,7 @@ export const appRouter = router({
       });
   }),
   event: eventRouter,
+  game: gameRouter,
 });
 
 export type AppRouter = typeof appRouter;

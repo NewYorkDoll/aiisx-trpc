@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model dim_switch_game_play_history {
+  titleId            String?   @db.VarChar(255)
+  titleName          String?   @db.VarChar(255)
+  deviceType         String?   @db.VarChar(255)
+  imageUrl           String?   @db.VarChar(255)
+  lastUpdatedAt      DateTime? @db.DateTime(0)
+  firstPlayedAt      DateTime? @db.DateTime(0)
+  lastPlayedAt       DateTime? @db.DateTime(0)
+  totalPlayedDays    Int?
+  totalPlayedMinutes Int?
+
+  @@ignore
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model dwd_switch_game_played_record {
+  id             Int       @id @default(autoincrement())
+  title_id       String?   @db.VarChar(255)
+  title_name     String?   @db.VarChar(255)
+  last_played_at DateTime? @db.DateTime(0)
+  play_time      Int?
+  create_time    DateTime? @db.DateTime(0)
+  update_time    DateTime? @db.DateTime(0)
+}
