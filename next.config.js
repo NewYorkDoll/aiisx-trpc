@@ -2,14 +2,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { env } = require('./src/server/env');
 
-/** @type {import('next').NextConfig} */
-const schedule = require('node-schedule');
-const execSync = require('child_process').execSync;
+const { start } = require('./cron/cron');
 
-schedule.scheduleJob('0 0 6,20,23 * * ? *', function () {
-  const output = execSync('python3 ./cmd/SwitchDA.py');
-  console.log('sync: ' + output.toString());
-});
+start();
+/** @type {import('next').NextConfig} */
 
 /**
  * Don't be scared of the generics here.

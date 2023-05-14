@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model ent_types {
+  id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  type String @unique(map: "type") @db.VarChar(255)
+}
+
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model dim_switch_game_play_history {
   titleId            String?   @db.VarChar(255)
@@ -22,6 +27,14 @@ model dim_switch_game_play_history {
   @@ignore
 }
 
+model dim_switch_game_name_translate_man {
+  title_id String @db.VarChar(255)
+  zh_name  String @db.VarChar(255)
+  zh_cover String @db.VarChar(255)
+
+  @@ignore
+}
+
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model dwd_switch_game_played_record {
   id             Int       @id @default(autoincrement())
@@ -31,4 +44,97 @@ model dwd_switch_game_played_record {
   play_time      Int?
   create_time    DateTime? @db.DateTime(0)
   update_time    DateTime? @db.DateTime(0)
+}
+
+model github_events {
+  id         BigInt   @id @default(autoincrement())
+  event_id   String   @unique(map: "event_id") @db.VarChar(255)
+  event_type String   @db.VarChar(255)
+  created_at DateTime @db.Timestamp(0)
+  public     Boolean  @default(false)
+  actor_id   BigInt
+  actor      Json
+  repo_id    BigInt
+  repo       Json
+  payload    Json
+}
+
+model github_repositories {
+  id                        BigInt    @id @default(autoincrement())
+  repo_id                   BigInt    @unique(map: "repo_id")
+  name                      String    @db.VarChar(255)
+  full_name                 String    @db.VarChar(255)
+  owner_login               String    @db.VarChar(255)
+  owner                     Json
+  public                    Boolean   @default(false)
+  html_url                  String    @db.VarChar(255)
+  description               String?   @db.VarChar(255)
+  fork                      Boolean   @default(false)
+  homepage                  String?   @db.VarChar(255)
+  star_count                BigInt    @default(0)
+  default_branch            String    @db.VarChar(255)
+  is_template               Boolean   @default(false)
+  has_issues                Boolean   @default(true)
+  archived                  Boolean   @default(false)
+  pushed_at                 DateTime? @db.Timestamp(0)
+  created_at                DateTime  @db.Timestamp(0)
+  updated_at                DateTime? @db.Timestamp(0)
+  license                   Json?
+  label_github_repositories BigInt?
+  labels                    labels?   @relation(fields: [label_github_repositories], references: [id], onUpdate: NoAction, map: "github_repositories_labels_github_repositories")
+
+  @@index([label_github_repositories], map: "github_repositories_labels_github_repositories")
+}
+
+model label_posts {
+  label_id BigInt
+  post_id  BigInt
+  labels   labels @relation(fields: [label_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "label_posts_label_id")
+  posts    posts  @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "label_posts_post_id")
+
+  @@id([label_id, post_id])
+  @@index([post_id], map: "label_posts_post_id")
+}
+
+model labels {
+  id                  BigInt                @id @default(autoincrement())
+  create_time         DateTime              @db.Timestamp(0)
+  update_time         DateTime              @db.Timestamp(0)
+  name                String                @unique(map: "name") @db.VarChar(255)
+  github_repositories github_repositories[]
+  label_posts         label_posts[]
+}
+
+model posts {
+  id           BigInt        @id @default(autoincrement())
+  create_time  DateTime      @db.Timestamp(0)
+  update_time  DateTime      @db.Timestamp(0)
+  slug         String        @unique(map: "slug") @db.VarChar(255)
+  title        String        @db.VarChar(100)
+  content      String        @db.Text
+  content_html String        @db.Text
+  summary      String        @db.Text
+  published_at DateTime      @db.Timestamp(0)
+  view_count   BigInt        @default(0)
+  public       Boolean       @default(false)
+  user_posts   BigInt
+  label_posts  label_posts[]
+  users        users         @relation(fields: [user_posts], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "posts_users_posts")
+
+  @@index([user_posts], map: "posts_users_posts")
+}
+
+model users {
+  id          BigInt   @id @default(autoincrement())
+  create_time DateTime @db.Timestamp(0)
+  update_time DateTime @db.Timestamp(0)
+  user_id     BigInt   @unique(map: "user_id")
+  login       String   @unique(map: "login") @db.VarChar(255)
+  name        String?  @db.VarChar(400)
+  avatar_url  String?  @db.VarChar(2048)
+  html_url    String?  @db.VarChar(2048)
+  email       String?  @db.VarChar(320)
+  location    String?  @db.VarChar(400)
+  bio         String?  @db.VarChar(400)
+  posts       posts[]
 }

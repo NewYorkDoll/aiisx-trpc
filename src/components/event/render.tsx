@@ -30,7 +30,7 @@ const EventRender = ({
       query.fetchNextPage();
     }
   }, [inViewport]);
-  const [cursor] = useState<string | null>(null);
+  const [cursor] = useState<number | null>(1);
   const params = {
     count: 15,
     cursor: cursor,
@@ -45,6 +45,7 @@ const EventRender = ({
     query.data?.pages.reduce((acc, page) => {
       return acc + page.items.length;
     }, 0) || 0;
+  console.log(query.data);
 
   useEffect(() => {
     stateChange(total);
@@ -57,7 +58,7 @@ const EventRender = ({
           <div key={i}>
             {page.items.map((d, i2) => (
               <div
-                key={d.id}
+                key={d.event_id}
                 style={{
                   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
@@ -70,40 +71,40 @@ const EventRender = ({
                   <Avatar
                     className="mr-1 align-middle p-[1px]"
                     size="xs"
-                    src={d.actor.avatarURL}
+                    src={d.actor.avatar_url}
                   ></Avatar>
                 </a>
                 <div className="flex items-center gap-2 truncate grow">
-                  {d.eventType === 'PushEvent' && (
+                  {d.event_type === 'PushEvent' && (
                     <EventItemPush
-                      commits={d.payload.commits}
+                      commits={d.payload.commits || []}
                       repo={d.repo}
-                      head={d.payload.head}
+                      head={d.payload.head || ''}
                     />
                   )}
-                  {d.eventType === 'WatchEvent' && (
+                  {d.event_type === 'WatchEvent' && (
                     <EventItemWatch
                       payload={d.payload}
                       repo={d.repo}
                     ></EventItemWatch>
                   )}
-                  {d.eventType === 'PullRequestEvent' && (
+                  {d.event_type === 'PullRequestEvent' && (
                     <EventItemPullRequest event={d}></EventItemPullRequest>
                   )}
-                  {d.eventType === 'CreateEvent' && (
+                  {d.event_type === 'CreateEvent' && (
                     <EventItemCreate event={d}></EventItemCreate>
                   )}
-                  {d.eventType === 'ForkEvent' && <EventItemFork event={d} />}
-                  {d.eventType === 'IssuesEvent' && (
+                  {d.event_type === 'ForkEvent' && <EventItemFork event={d} />}
+                  {d.event_type === 'IssuesEvent' && (
                     <EventItemIssues event={d}></EventItemIssues>
                   )}
-                  {d.eventType === 'IssueCommentEvent' && (
+                  {d.event_type === 'IssueCommentEvent' && (
                     <EventItemIssueComment event={d}></EventItemIssueComment>
                   )}
                 </div>
                 <div className="flex-none">
                   <Tooltip
-                    content={<TimeAgo datetime={d.createdAt} locale="zh_CN" />}
+                    content={<TimeAgo datetime={d.created_at} locale="zh_CN" />}
                   >
                     <Icon
                       icon="mdi:clock-time-two-outline"

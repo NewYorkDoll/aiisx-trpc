@@ -5,10 +5,13 @@ import pandas as pd
 from sqlalchemy import create_engine,types
 import pymysql
 from dotenv import load_dotenv
-
+from requests_html import HTMLSession
 from SwitchWebAPI import *
-
+from bs4 import BeautifulSoup
 load_dotenv()
+session = HTMLSession()
+
+
 client_id = os.getenv("SWITCH_CLIENT_ID") # 你生成session_token时使用的client_id
 ua = 'com.nintendo.znej/1.13.0 (Android/7.1.2)'
 session_token=os.getenv("SWITCH_SESSION_TOKEN") #你的session_token
@@ -16,6 +19,38 @@ db_user=os.getenv("DB_USER") # 用于连接数据库的用户名
 db_passwd=os.getenv("DB_PASSWD") # 用于连接数据库的用户密码
 db_dbname=os.getenv("DB_DBNAME") # 数据库中待连接的库名
 db_hostname=os.getenv("DB_HOST") # 数据库主机地址
+db_port=os.getenv("DB_PORT") # 数据库端口
+
+# 通过ec.nintendo.com/HK/zh/titles/获取游戏中文信息
+def NS_GetGameZhInfo(title_id,ua,name,cover):
+    url="https://ec.nintendo.com/apps/"+title_id+"/HK"
+    headers={
+        "User-Agent":ua,
+        "Origin":"https://ec.nintendo.com",
+        "Connection":"keep-alive",
+        "Pragma":"no-cache",
+        "Cache-Control":"no-cache"
+    }
+    r=session.get(url,headers=headers)
+    r.html.render(sleep=1,script="""
+         setTimeout(function(){
+            const el = document.querySelector('.o_p-product-filter-background')
+            if(el){
+                document.querySelector('.o_c-button-fill').click()
+                }}
+            , 500);
+    """)
+    soup=BeautifulSoup(r.html.html,"html.parser")
+    try:
+
+        # 中文名在.o_c-page-title的div下的h1标签里
+        zh_name=soup.select(".o_c-page-title h1")[0].text
+        # .o_c-hero-bg__image-inner的div下的img标签的src属性
+        zh_cover=soup.select(".o_c-hero-bg__image-inner img")[0].attrs["src"]
+    except IndexError:
+        zh_name=name
+        zh_cover=cover
+    return zh_name,zh_cover
 
 def SwitchDA_GamePlayHistory(client_id,session_token,ua):
     results=NS_GetPlayHistory(NS_GetAccessToken(client_id,session_token),ua)
@@ -29,7 +64,8 @@ def SwitchDA_GamePlayHistory(client_id,session_token,ua):
     lastPlayedAt=[]
     totalPlayedDays=[]
     totalPlayedMinutes=[]
-
+    zh_name=[]
+    zh_cover=[]
     for i in results["playHistories"]:
         titleId.append(i["titleId"])
         titleName.append(i["titleName"])
@@ -40,8 +76,13 @@ def SwitchDA_GamePlayHistory(client_id,session_token,ua):
         lastPlayedAt.append(i["lastPlayedAt"])
         totalPlayedDays.append(i["totalPlayedDays"])
         totalPlayedMinutes.append(i["totalPlayedMinutes"])
-    
+        gameZhInfo = NS_GetGameZhInfo(i["titleId"],ua,i['titleName'],i['imageUrl'])
+        zh_name.append(gameZhInfo[0])
+        zh_cover.append(gameZhInfo[1])
     df=pd.DataFrame({"titleId":titleId,"titleName":titleName,"deviceType":deviceType,"imageUrl":imageUrl,"lastUpdatedAt":lastUpdatedAt,"firstPlayedAt":firstPlayedAt,"lastPlayedAt":lastPlayedAt,"totalPlayedDays":totalPlayedDays,"totalPlayedMinutes":totalPlayedMinutes})
+
+    zh_df=pd.DataFrame({"title_id":titleId,"zh_name":zh_name,"zh_cover":zh_cover})
+
 
     UTC9to8=lambda x: (datetime.strptime(x,"%Y-%m-%dT%H:%M:%S+09:00")-timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")
 
@@ -51,7 +92,7 @@ def SwitchDA_GamePlayHistory(client_id,session_token,ua):
 
     # print(df)
 
-    con_engine = create_engine('mysql+pymysql://'+db_user+':'+db_passwd+'@'+db_hostname+':3306/'+db_dbname+'?charset=utf8')
+    con_engine = create_engine('mysql+pymysql://'+db_user+':'+db_passwd+'@'+db_hostname+':'+db_port+'/'+db_dbname+'?charset=utf8')
 
     dtype={"titleId":types.String(length=255),
             "titleName":types.String(length=255),
@@ -66,12 +107,18 @@ def SwitchDA_GamePlayHistory(client_id,session_token,ua):
 
     df.to_sql('dim_switch_game_play_history', con_engine, dtype=dtype, if_exists='replace', index = False)
 
+    dtype={"title_id":types.String(length=255),
+            "zh_name":types.String(length=255),
+            "zh_cover":types.String(length=255)
+    }
+
+    zh_df.to_sql('dim_switch_game_name_translate_man', con_engine, dtype=dtype, if_exists='replace', index = False)
 
 def SwitchDA_GamePlayedRecord():
 
     db = pymysql.connect(
         host=db_hostname, 
-        port=3306,
+        port=int(db_port),
         user=db_user,    #在这里输入用户名
         password=db_passwd,     #在这里输入密码
         charset='utf8mb4',
