@@ -28,29 +28,31 @@ model dim_switch_game_play_history {
 }
 
 model dim_switch_game_name_translate_man {
-  title_id String @db.VarChar(255)
-  zh_name  String @db.VarChar(255)
-  zh_cover String @db.VarChar(255)
+  title_id String? @db.VarChar(255)
+  zh_name  String? @db.VarChar(255)
+  zh_cover String? @db.VarChar(255)
 
   @@ignore
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model dwd_switch_game_played_record {
-  id             Int       @id @default(autoincrement())
-  title_id       String?   @db.VarChar(255)
-  title_name     String?   @db.VarChar(255)
-  last_played_at DateTime? @db.DateTime(0)
-  play_time      Int?
-  create_time    DateTime? @db.DateTime(0)
-  update_time    DateTime? @db.DateTime(0)
+  id             Int      @id @default(autoincrement())
+  title_id       String   @db.VarChar(255)
+  title_name     String   @db.VarChar(255)
+  zh_name        String?  @db.VarChar(255)
+  zh_cover       String?  @db.VarChar(255)
+  last_played_at DateTime @db.DateTime(0)
+  play_time      Int
+  create_time    DateTime @db.DateTime(0)
+  update_time    DateTime @db.DateTime(0)
 }
 
 model github_events {
   id         BigInt   @id @default(autoincrement())
   event_id   String   @unique(map: "event_id") @db.VarChar(255)
   event_type String   @db.VarChar(255)
-  created_at DateTime @db.Timestamp(0)
+  created_at DateTime @db.Timestamp(6)
   public     Boolean  @default(false)
   actor_id   BigInt
   actor      Json

@@ -8,11 +8,46 @@ CREATE TABLE `ent_types` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `dim_switch_game_play_history` (
+    `titleId` VARCHAR(255) NULL,
+    `titleName` VARCHAR(255) NULL,
+    `deviceType` VARCHAR(255) NULL,
+    `imageUrl` VARCHAR(255) NULL,
+    `lastUpdatedAt` DATETIME(0) NULL,
+    `firstPlayedAt` DATETIME(0) NULL,
+    `lastPlayedAt` DATETIME(0) NULL,
+    `totalPlayedDays` INTEGER NULL,
+    `totalPlayedMinutes` INTEGER NULL
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `dim_switch_game_name_translate_man` (
+    `title_id` VARCHAR(255) NULL,
+    `zh_name` VARCHAR(255) NULL,
+    `zh_cover` VARCHAR(255) NULL
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `dwd_switch_game_played_record` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `title_id` VARCHAR(255) NULL,
+    `title_name` VARCHAR(255) NULL,
+    `zh_name` VARCHAR(255) NULL,
+    `zh_cover` VARCHAR(255) NULL,
+    `last_played_at` DATETIME(0) NULL,
+    `play_time` INTEGER NULL,
+    `create_time` DATETIME(0) NULL,
+    `update_time` DATETIME(0) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `github_events` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `event_id` VARCHAR(255) NOT NULL,
     `event_type` VARCHAR(255) NOT NULL,
-    `created_at` TIMESTAMP(0) NOT NULL,
+    `created_at` TIMESTAMP(6) NOT NULL,
     `public` BOOLEAN NOT NULL DEFAULT false,
     `actor_id` BIGINT NOT NULL,
     `actor` JSON NOT NULL,

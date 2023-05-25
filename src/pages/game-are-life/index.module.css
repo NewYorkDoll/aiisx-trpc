@@ -2,6 +2,12 @@
   position: relative;
   z-index: 1;
   margin: auto;
+  margin-top: 24px;
+  scrollbar-color: #d4aa70 #e4e4e4;
+  transition: scrollbar-color 0.3s ease-out;
+}
+.switch:hover {
+  scrollbar-color: #5749d2;
 }
 
 .body {

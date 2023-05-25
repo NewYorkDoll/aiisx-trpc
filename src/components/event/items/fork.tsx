@@ -1,8 +1,8 @@
-import { EventNode } from '~/interface/github';
+import { GithubEvent } from '~/interface/github';
 import Link from '~/components/Link';
 import EventBlame from '../Blame';
 
-const EventItemFork = ({ event }: { event: EventNode }) => {
+const EventItemFork = ({ event }: { event: GithubEvent }) => {
   const repo = event.repo;
   const fork = event.payload.forkee;
   return (

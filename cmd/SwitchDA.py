@@ -41,6 +41,8 @@ def NS_GetGameZhInfo(title_id,ua,name,cover):
             , 500);
     """)
     soup=BeautifulSoup(r.html.html,"html.parser")
+    zh_name=name
+    zh_cover=cover
     try:
 
         # 中文名在.o_c-page-title的div下的h1标签里
@@ -48,8 +50,8 @@ def NS_GetGameZhInfo(title_id,ua,name,cover):
         # .o_c-hero-bg__image-inner的div下的img标签的src属性
         zh_cover=soup.select(".o_c-hero-bg__image-inner img")[0].attrs["src"]
     except IndexError:
-        zh_name=name
-        zh_cover=cover
+        print("暂无中文信息", zh_name)
+    # 
     return zh_name,zh_cover
 
 def SwitchDA_GamePlayHistory(client_id,session_token,ua):
@@ -94,10 +96,10 @@ def SwitchDA_GamePlayHistory(client_id,session_token,ua):
 
     con_engine = create_engine('mysql+pymysql://'+db_user+':'+db_passwd+'@'+db_hostname+':'+db_port+'/'+db_dbname+'?charset=utf8')
 
-    dtype={"titleId":types.String(length=255),
-            "titleName":types.String(length=255),
-            "deviceType":types.String(length=255),
-            "imageUrl":types.String(length=255),
+    dtype={"titleId":types.String(length=255,collation='utf8mb4_unicode_ci'),
+            "titleName":types.String(length=255,collation='utf8mb4_unicode_ci'),
+            "deviceType":types.String(length=255,collation='utf8mb4_unicode_ci'),
+            "imageUrl":types.String(length=255,collation='utf8mb4_unicode_ci'),
             "lastUpdatedAt":types.DateTime(),
             "firstPlayedAt":types.DateTime(),
             "lastPlayedAt":types.DateTime(),
@@ -107,9 +109,9 @@ def SwitchDA_GamePlayHistory(client_id,session_token,ua):
 
     df.to_sql('dim_switch_game_play_history', con_engine, dtype=dtype, if_exists='replace', index = False)
 
-    dtype={"title_id":types.String(length=255),
-            "zh_name":types.String(length=255),
-            "zh_cover":types.String(length=255)
+    dtype={"title_id":types.String(length=255,collation='utf8mb4_unicode_ci'),
+            "zh_name":types.String(length=255,collation='utf8mb4_unicode_ci'),
+            "zh_cover":types.String(length=255,collation='utf8mb4_unicode_ci')
     }
 
     zh_df.to_sql('dim_switch_game_name_translate_man', con_engine, dtype=dtype, if_exists='replace', index = False)
@@ -134,6 +136,8 @@ def SwitchDA_GamePlayedRecord():
                 NULL id,
                 t1.titleId ,
                 t1.titleName ,
+                NULL zh_name,
+                NULL zh_cover,
                 t1.lastPlayedAt,
                 COALESCE(t1.totalPlayedMinutes  - t2.play_time,t1.totalPlayedMinutes) play_time,
                 NOW() create_time,
@@ -155,11 +159,17 @@ def SwitchDA_GamePlayedRecord():
         FROM dwd_switch_game_played_record
         GROUP BY title_id
         )t2
-        ON t1.titleId=t2.title_id
-        WHERE t2.last_played_at IS NULL OR t1.lastPlayedAt !=t2.last_played_at
+        ON t1.titleId=t2.title_id COLLATE utf8mb4_unicode_ci
+        WHERE t2.last_played_at IS NULL OR t1.lastPlayedAt !=t2.last_played_at COLLATE utf8mb4_unicode_ci;
         """
         # print(sql)
         cursor.execute(sql)
+        db.commit()
+        cursor.execute("""
+            UPDATE dwd_switch_game_played_record AS r
+                JOIN dim_switch_game_name_translate_man AS t ON r.title_id = t.title_id
+            SET r.zh_name = t.zh_name, r.zh_cover = t.zh_cover;
+        """)
         db.commit()
 
     except Exception as e:

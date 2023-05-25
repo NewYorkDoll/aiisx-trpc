@@ -1,9 +1,9 @@
 import Link from '~/components/Link';
-import { EventNode } from '~/interface/github';
+import { GithubEvent } from '~/interface/github';
 import ItemTooltip from './hover-item';
 import EventBlame from '../Blame';
 
-const EventItemIssueComment = ({ event }: { event: EventNode }) => {
+const EventItemIssueComment = ({ event }: { event: GithubEvent }) => {
   const repo = event.repo;
   const action = event.payload.action || '';
   const issue = event.payload.issue;

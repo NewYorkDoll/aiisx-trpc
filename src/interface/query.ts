@@ -23,12 +23,12 @@ export interface Version {
 
 export interface CodingStats {
   totalDuration: string;
-  totalSeconds: number;
+  TotalSeconds: number;
   calculatedDays: number;
   languages: Language[];
 }
 
 export interface Language {
   language: string;
-  totalSeconds: number;
+  total: number;
 }

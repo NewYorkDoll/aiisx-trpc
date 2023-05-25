@@ -1,10 +1,10 @@
-import { EventNode } from '~/interface/github';
+import { GithubEvent } from '~/interface/github';
 import ItemTooltip from './hover-item';
 import Link from '~/components/Link';
 import { Icon } from '@iconify/react';
 import EventBlame from '../Blame';
 
-const EventItemPullRequest = ({ event }: { event: EventNode }) => {
+const EventItemPullRequest = ({ event }: { event: GithubEvent }) => {
   const action = event.payload.action;
   const pr = event.payload.pull_request;
   const repo = event.repo;

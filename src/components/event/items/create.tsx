@@ -1,9 +1,9 @@
-import { EventNode } from '~/interface/github';
+import { GithubEvent } from '~/interface/github';
 import ItemTooltip from './hover-item';
 import { Icon } from '@iconify/react';
 import Link from '~/components/Link';
 
-const EventItemCreate = ({ event }: { event: EventNode }) => {
+const EventItemCreate = ({ event }: { event: GithubEvent }) => {
   return (
     <div className="whitespace-nowrap flex gap-2">
       {' '}

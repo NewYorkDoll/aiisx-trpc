@@ -45,7 +45,6 @@ const EventRender = ({
     query.data?.pages.reduce((acc, page) => {
       return acc + page.items.length;
     }, 0) || 0;
-  console.log(query.data);
 
   useEffect(() => {
     stateChange(total);

@@ -69,18 +69,21 @@ const TerminalLayout = ({
 
   interface LanguageBucket {
     language: string;
-    totalSeconds: number;
+    total: number;
     percentage?: number;
     titleLength?: number;
   }
 
   const codingStats = (function () {
+    console.log(baseInfo.codingStats.languages);
+    console.log(baseInfo.codingStats.TotalSeconds);
+
     const out: LanguageBucket[] = [];
     let maxTitleLength = 5;
     for (const stat of baseInfo.codingStats.languages) {
       if (out[5]) {
         out[5].language = 'Other';
-        out[5].totalSeconds += stat.totalSeconds;
+        out[5].total += stat.total;
         continue;
       }
       maxTitleLength = Math.max(maxTitleLength, stat.language.length);
@@ -90,7 +93,7 @@ const TerminalLayout = ({
     for (const stat of out) {
       stat.titleLength = maxTitleLength;
       stat.percentage = Math.round(
-        (stat.totalSeconds / baseInfo.codingStats.totalSeconds) * 100,
+        (stat.total / baseInfo.codingStats.TotalSeconds) * 100,
       );
     }
     return out;
@@ -141,8 +144,6 @@ const TerminalLayout = ({
     { to: '/contact', name: 'Contact', alias: 'sudo' },
   ];
 
-  // 从环境变量中获取打包时间
-  const buildTime = process.env.BUILD_TIME ?? 'n/a';
   return (
     <>
       <div className="flex items-stretch justify-center flex-auto w-full lg:items-center h-[100vh]">
@@ -168,7 +169,10 @@ const TerminalLayout = ({
             >
               <span className="flex flex-auto text-[14px]">
                 <CustomTooltip
-                  content={`client build date: ${buildTime}
+                  content={`commit message: ${baseInfo.version.commit.slice(
+                    0,
+                    24,
+                  )}...
 server build date: ${baseInfo.version.date}`}
                 >
                   <Icon
@@ -187,7 +191,7 @@ server build date: ${baseInfo.version.date}`}
                 </CustomTooltip>
                 <span className={styles.barItem}>
                   <Icon
-                    icon="logos:gopher"
+                    icon="logos:nodejs-icon"
                     className="mr-1 align-middle"
                   ></Icon>
                   {baseInfo.version.goVersion.replace('go', '')}

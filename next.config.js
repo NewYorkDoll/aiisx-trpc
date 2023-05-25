@@ -4,7 +4,9 @@ const { env } = require('./src/server/env');
 
 const { start } = require('./cron/cron');
 
-start();
+setTimeout(() => {
+  start();
+}, 0);
 /** @type {import('next').NextConfig} */
 
 /**
