@@ -37,7 +37,7 @@
     "@trpc/react-query": "^10.18.0",
     "@trpc/server": "^10.18.0",
     "@types/node-cron": "^3.0.7",
-    "@urql/core": "^4.0.4",
+    "@urql/core": "^4.0.10",
     "ahooks": "^3.7.6",
     "axios": "^1.4.0",
     "clsx": "^1.1.1",
