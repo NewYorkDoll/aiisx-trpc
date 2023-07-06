@@ -32,13 +32,15 @@ def NS_GetGameZhInfo(title_id,ua,name,cover):
         "Cache-Control":"no-cache"
     }
     r=session.get(url,headers=headers)
-    r.html.render(sleep=1,script="""
+    r.html.render(sleep=0.5,script="""
+    () => {
          setTimeout(function(){
             const el = document.querySelector('.o_p-product-filter-background')
             if(el){
                 document.querySelector('.o_c-button-fill').click()
                 }}
-            , 500);
+            , 200);
+        }
     """)
     soup=BeautifulSoup(r.html.html,"html.parser")
     zh_name=name
