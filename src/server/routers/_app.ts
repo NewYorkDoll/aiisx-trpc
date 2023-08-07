@@ -26,44 +26,6 @@ function getLastCommit() {
     });
 }
 
-const QUERY = `
-query base {
-  self {
-    id
-    name
-    login
-    avatarURL
-  }
-
-  githubUser {
-    login
-    name
-    avatarURL
-    bio
-    email
-    location
-    htmlurl
-  }
-  version {
-    commit
-    goVersion
-    date
-  }
-
-  codingStats {
-    totalDuration
-    totalSeconds
-    calculatedDays
-
-    languages {
-      language
-      totalSeconds
-    }
-  }
-}
-
-`;
-
 function formatDuration(seconds: number) {
   const hours = Math.floor(seconds / 3600);
   let minutes = Math.floor((seconds / 60) % 60);

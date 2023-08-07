@@ -74,6 +74,8 @@ const GameAreLife = (
 
   // wheel事件回调
   const onWheel = useCallback((e: WheelEvent) => {
+    e.preventDefault();
+
     const time = getTime();
     const y = e.deltaY; // 以垂直滚动为列
 
@@ -105,17 +107,6 @@ const GameAreLife = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (!box.current) return;
-    const boxEle = box.current;
-    boxEle.addEventListener('wheel', onWheel);
-
-    return function () {
-      boxEle.removeEventListener('wheel', onWheel);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const baseInfo = {
     githubUser: {
       name: 'yiziluoying',
@@ -138,6 +129,14 @@ const GameAreLife = (
       setShowCard(true);
     }, 1600);
   });
+
+  useEffect(() => {
+    document.addEventListener('wheel', onWheel, { passive: false });
+
+    return function () {
+      document.removeEventListener('wheel', onWheel);
+    };
+  }, [onWheel]);
 
   const box = useRef<HTMLDivElement>(null);
 
@@ -172,7 +171,7 @@ const GameAreLife = (
 
               {showCard && switchGameList && (
                 <div
-                  className="snap-x flex w-full overflow-hidden select-none pr-2"
+                  className="snap-x flex w-full overflow-hidden select-none pr-2 touch-none"
                   ref={box}
                 >
                   {switchGameList.map((i) => {
