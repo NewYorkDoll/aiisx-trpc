@@ -58,7 +58,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/cron ./cron
 COPY --from=builder --chown=nextjs:nodejs /app/cmd ./cmd
 COPY --from=builder --chown=nextjs:nodejs /app/.git/ ./.git/
-RUN sudo chown -R nextjs /app
+RUN chown -R nextjs /app
 
 
 
