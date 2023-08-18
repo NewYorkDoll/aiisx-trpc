@@ -32,6 +32,7 @@ module.exports = getConfig({
   publicRuntimeConfig: {
     NODE_ENV: env.NODE_ENV,
   },
+  output: 'standalone',
   /** We run eslint as a separate task in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },
 });
