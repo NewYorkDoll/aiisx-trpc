@@ -9,7 +9,6 @@ WORKDIR /app
 
 
 RUN npm install -g pnpm
-RUN apk add git
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
@@ -49,7 +48,8 @@ RUN npm install pm2 -g
 RUN pm2 install pm2-logrotate
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-
+RUN apk add git
+RUN git config --global --add safe.directory '*'
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
