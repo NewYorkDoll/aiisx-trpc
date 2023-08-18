@@ -75,9 +75,6 @@ const TerminalLayout = ({
   }
 
   const codingStats = (function () {
-    console.log(baseInfo.codingStats.languages);
-    console.log(baseInfo.codingStats.TotalSeconds);
-
     const out: LanguageBucket[] = [];
     let maxTitleLength = 5;
     for (const stat of baseInfo.codingStats.languages) {
