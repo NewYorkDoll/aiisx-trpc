@@ -9,6 +9,7 @@ WORKDIR /app
 
 
 RUN npm install -g pnpm
+RUN apk add git
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
@@ -48,7 +49,6 @@ RUN npm install pm2 -g
 RUN pm2 install pm2-logrotate
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-RUN apk add git
 
 
 # Automatically leverage output traces to reduce image size
