@@ -59,7 +59,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/cron ./cron
 COPY --from=builder --chown=nextjs:nodejs /app/cmd ./cmd
 COPY --from=builder --chown=nextjs:nodejs /app/.git/ ./.git/
-COPY --from=builder --chown=nextjs:nodejs /app/.env ./
 
 
 
