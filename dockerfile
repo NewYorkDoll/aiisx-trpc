@@ -49,7 +49,6 @@ RUN pm2 install pm2-logrotate
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 RUN apk add git
-RUN git config --global --add safe.directory '*'
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
@@ -59,6 +58,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/cron ./cron
 COPY --from=builder --chown=nextjs:nodejs /app/cmd ./cmd
 COPY --from=builder --chown=nextjs:nodejs /app/.git/ ./.git/
+RUN git config --global --add safe.directory /app
 
 
 
